@@ -1,6 +1,6 @@
 "use client"
 
-import * as React from "react"
+import { lazy, Suspense } from "react"
 import {
     BookOpen,
     Bot,
@@ -14,10 +14,6 @@ import {
     SquareTerminal,
 } from "lucide-react"
 
-import { NavMain } from "@/components/nav-main"
-import { NavProjects } from "@/components/nav-projects"
-import { NavSecondary } from "@/components/nav-secondary"
-import { NavUser } from "@/components/nav-user"
 import {
     Sidebar,
     SidebarContent,
@@ -28,12 +24,25 @@ import {
     SidebarMenuItem,
 } from "@/components/ui/sidebar"
 
+const NavMain = lazy(() =>
+    import("@/components/nav-main").then(module => ({ default: module.NavMain }))
+)
+// const NavProjects = lazy(() =>
+//     import("@/components/nav-projects").then(module => ({ default: module.NavProjects }))
+// )
+const NavSecondary = lazy(() =>
+    import("@/components/nav-secondary").then(module => ({ default: module.NavSecondary }))
+)
+const NavUser = lazy(() =>
+    import("@/components/nav-user").then(module => ({ default: module.NavUser }))
+)
+
+function Skeleton({ className }) {
+    return <div className={`bg-gray-200 animate-pulse rounded ${className}`} />
+}
+
 const data = {
-    user: {
-        name: "shadcn",
-        email: "m@example.com",
-        avatar: "/avatars/shadcn.jpg",
-    },
+    user: { name: "shadcn", email: "m@example.com", avatar: "/avatars/shadcn.jpg" },
     navMain: [
         {
             title: "Room",
@@ -41,22 +50,21 @@ const data = {
             icon: SquareTerminal,
             isActive: true,
             items: [
-                {
-                    title: "Create Room",
-                    url: "#",
-                },
-                {
-                    title: "View Rooms",
-                    url: "#",
-                },
-                {
-                    title: "Update Room",
-                    url: "#",
-                },
-                {
-                    title: "Delete Room",
-                    url: "#",
-                },
+                { title: "Create Room", url: "#" },
+                { title: "View Rooms", url: "#" },
+                { title: "Update Room", url: "#" },
+                { title: "Delete Room", url: "#" },
+            ],
+        },
+        {
+            title: "Hotel",
+            url: "#",
+            icon: SquareTerminal,
+            items: [
+                { title: "Create Hotel", url: "#" },
+                { title: "View Hotel", url: "#" },
+                { title: "Update Hotel", url: "#" },
+                { title: "Delete Hotel", url: "#" },
             ],
         },
         {
@@ -64,22 +72,10 @@ const data = {
             url: "#",
             icon: Bot,
             items: [
-                {
-                    title: "All Bookings",
-                    url: "#",
-                },
-                {
-                    title: "Cancelled Bookings",
-                    url: "#",
-                },
-                {
-                    title: "Pending Bookings",
-                    url: "#",
-                },
-                {
-                    title: "Completed Bookings",
-                    url: "#",
-                },
+                { title: "All Bookings", url: "#" },
+                { title: "Cancelled Bookings", url: "#" },
+                { title: "Pending Bookings", url: "#" },
+                { title: "Completed Bookings", url: "#" },
             ],
         },
         {
@@ -87,18 +83,9 @@ const data = {
             url: "#",
             icon: BookOpen,
             items: [
-                {
-                    title: "Users List",
-                    url: "#",
-                },
-                {
-                    title: "Roles & Permissions",
-                    url: "#",
-                },
-                {
-                    title: "Blocked Users",
-                    url: "#",
-                },
+                { title: "Users List", url: "#" },
+                { title: "Roles & Permissions", url: "#" },
+                { title: "Blocked Users", url: "#" },
             ],
         },
         {
@@ -106,57 +93,25 @@ const data = {
             url: "#",
             icon: Settings2,
             items: [
-                {
-                    title: "App Settings",
-                    url: "#",
-                },
-                {
-                    title: "Preferences",
-                    url: "#",
-                },
-                {
-                    title: "System Health",
-                    url: "#",
-                },
-                {
-                    title: "Audit Logs",
-                    url: "#",
-                },
+                { title: "App Settings", url: "#" },
+                { title: "Preferences", url: "#" },
+                { title: "System Health", url: "#" },
+                { title: "Audit Logs", url: "#" },
             ],
         },
     ],
     navSecondary: [
-        {
-            title: "Support",
-            url: "#",
-            icon: LifeBuoy,
-        },
-        {
-            title: "Feedback",
-            url: "#",
-            icon: Send,
-        },
+        { title: "Support", url: "#", icon: LifeBuoy },
+        { title: "Feedback", url: "#", icon: Send },
     ],
     projects: [
-        {
-            name: "GraphQL API",
-            url: "#",
-            icon: Frame,
-        },
-        {
-            name: "Design System",
-            url: "#",
-            icon: PieChart,
-        },
-        {
-            name: "Marketing Site",
-            url: "#",
-            icon: Map,
-        },
+        { name: "GraphQL API", url: "#", icon: Frame },
+        { name: "Design System", url: "#", icon: PieChart },
+        { name: "Marketing Site", url: "#", icon: Map },
     ],
 }
 
-export function AppSidebar({ ...props }) {
+export function AppSidebar(props) {
     return (
         <Sidebar variant="inset" {...props}>
             <SidebarHeader>
@@ -168,21 +123,33 @@ export function AppSidebar({ ...props }) {
                                     <Command className="size-4" />
                                 </div>
                                 <div className="grid flex-1 text-left text-sm leading-tight">
-                                    <span className="truncate font-medium">Acme Inc</span>
-                                    <span className="truncate text-xs">Enterprise</span>
+                                    <Skeleton className="h-4 w-24 mb-1" />
+                                    <Skeleton className="h-3 w-16" />
                                 </div>
                             </a>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
                 </SidebarMenu>
             </SidebarHeader>
+
             <SidebarContent>
-                <NavMain items={data.navMain} />
-                <NavProjects projects={data.projects} />
-                <NavSecondary items={data.navSecondary} className="mt-auto" />
+                <Suspense fallback={<Skeleton className="h-6 my-2 w-full" />}>
+                    <NavMain items={data.navMain} />
+                </Suspense>
+
+                <Suspense fallback={<Skeleton className="h-6 my-2 w-full" />}>
+                    {/* <NavProjects projects={data.projects} /> */}
+                </Suspense>
+
+                <Suspense fallback={<Skeleton className="h-6 my-2 w-full" />}>
+                    <NavSecondary items={data.navSecondary} className="mt-auto" />
+                </Suspense>
             </SidebarContent>
+
             <SidebarFooter>
-                <NavUser user={data.user} />
+                <Suspense fallback={<Skeleton className="h-12 w-full rounded-full" />}>
+                    <NavUser user={data.user} />
+                </Suspense>
             </SidebarFooter>
         </Sidebar>
     )
