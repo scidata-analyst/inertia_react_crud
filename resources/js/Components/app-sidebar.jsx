@@ -42,7 +42,7 @@ function Skeleton({ className }) {
 }
 
 const data = {
-    user: { name: "shadcn", email: "m@example.com", avatar: "/avatars/shadcn.jpg" },
+    user: { name: "shadcn", email: "m@example.com", avatar: "https://static.vecteezy.com/system/resources/previews/027/951/137/non_2x/stylish-spectacles-guy-3d-avatar-character-illustrations-png.png" },
     navMain: [
         {
             title: "Room",

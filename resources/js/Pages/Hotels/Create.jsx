@@ -66,7 +66,9 @@ export default function CreateHotel() {
         router.post("/hotels", values, {
             onSuccess: () => {
                 if (flash?.success) {
-                    toast.success(flash.success)
+                    toast.success(flash.success, {
+                        style: { backgroundColor: "#16a34a", color: "white" },
+                    })
                 }
                 form.reset()
             },
@@ -74,7 +76,9 @@ export default function CreateHotel() {
                 Object.entries(errors).forEach(([key, value]) => {
                     const message = Array.isArray(value) ? value.join(", ") : String(value)
                     //form.setError(key, { type: "server", message })
-                    toast.error(message)
+                    toast.error(message, {
+                        style: { backgroundColor: "#dc2626", color: "white" },
+                    })
                 })
             }
         })
@@ -85,7 +89,7 @@ export default function CreateHotel() {
             <Head title="Create Hotel - Hotel Management" />
             <div className="bg-muted/50 flex-1 rounded-xl p-6 md:min-h-min">
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-3">
                         {/* Name */}
                         <FormField
                             control={form.control}
@@ -95,21 +99,6 @@ export default function CreateHotel() {
                                     <FormLabel>Hotel Name</FormLabel>
                                     <FormControl>
                                         <Input placeholder="My Hotel" {...field} />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-
-                        {/* Description */}
-                        <FormField
-                            control={form.control}
-                            name="description"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Description</FormLabel>
-                                    <FormControl>
-                                        <Textarea placeholder="Hotel description..." {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -298,7 +287,28 @@ export default function CreateHotel() {
                             )}
                         />
 
-                        <Button type="submit">Create Hotel</Button>
+
+                        {/* Description - full width */}
+                        <FormField
+                            control={form.control}
+                            name="description"
+                            render={({ field }) => (
+                                <FormItem className="col-span-full">
+                                    <FormLabel>Description</FormLabel>
+                                    <FormControl>
+                                        <Textarea placeholder="Hotel description..." {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+
+                        {/* Submit Button - full width */}
+                        <div className="col-span-full">
+                            <Button type="submit" className="w-full">
+                                Create Hotel
+                            </Button>
+                        </div>
                     </form>
                 </Form>
             </div>

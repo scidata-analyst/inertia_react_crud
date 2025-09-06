@@ -43,7 +43,12 @@ export default function Layout({ children }) {
                     </div>
                 </header>
                 <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-                    <Toaster />
+                    <Toaster toastOptions={{
+                        classNames: {
+                            error: "bg-red-600 text-white",
+                            success: "bg-green-600 text-white",
+                        },
+                    }} />
                     {children}
                 </div>
             </SidebarInset>
