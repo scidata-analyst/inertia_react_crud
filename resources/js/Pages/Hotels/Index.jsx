@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"
 import Layout from "@/Layout"
-import { Head, router } from "@inertiajs/react"
+import { Head, router, Link } from "@inertiajs/react"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
@@ -40,18 +40,70 @@ import {
 import { Label } from "@/components/ui/label"
 
 export default function Index({ hotels }) {
-    const [loading, setLoading] = useState(true)
+    const [loading, setLoading] = useState(false)
     const [selectedHotel, setSelectedHotel] = useState(null)
     const [deleteHotel, setDeleteHotel] = useState(null)
     const [error, setError] = useState(null)
     const [submitting, setSubmitting] = useState(false)
     const [isDialogOpen, setIsDialogOpen] = useState(false)
+    const [HotelData, setHotelData] = useState(hotels)
+    const [filterData, setFilterData] = useState({
+        name: '',
+        zip_code: '',
+        country: '',
+        city: '',
+        state: '',
+        rating: '',
+        per_page: 8,
+    })
 
-    useEffect(() => {
-        const timer = setTimeout(() => setLoading(false), 500)
-        return () => clearTimeout(timer)
-    }, [])
+    /* handle filter */
+    const handleFilter = async () => {
+        setLoading(true);
+        const response = await router.get('/hotels', {
+            ...filterData,
+            per_page: filterData.per_page || 8,
+        }, {
+            preserveState: true,
+            preserveScroll: true,
+            onSuccess: (page) => {
+                setHotelData(page.props.hotels);
+                setLoading(false);
+            },
+            onError: () => {
+                setLoading(false);
+            }
+        });
+    }
 
+    /* handle reset filter */
+    const handleReset = async () => {
+        setFilterData({
+            name: '',
+            zip_code: '',
+            country: '',
+            city: '',
+            state: '',
+            rating: '',
+            per_page: 8,
+        });
+        setLoading(true);
+        const response = await router.get('/hotels', {
+            per_page: 8,
+        }, {
+            preserveState: true,
+            preserveScroll: true,
+            onSuccess: (page) => {
+                setHotelData(page.props.hotels);
+                setLoading(false);
+            },
+            onError: () => {
+                setLoading(false);
+            }
+        });
+    }
+
+    /* handle update hotel */
     const handleEditSubmit = async (e) => {
         e.preventDefault()
 
@@ -90,7 +142,6 @@ export default function Index({ hotels }) {
             })
             setError(null)
             setSubmitting(false)
-
             setIsDialogOpen(false)
             router.reload()
         } else {
@@ -100,11 +151,20 @@ export default function Index({ hotels }) {
         }
     }
 
-
+    /* handle delete hotel */
     const handleDeleteConfirm = () => {
         // TODO: Replace with API call
         console.log("Deleted hotel:", deleteHotel)
     }
+
+    /* handle pagination link */
+    const renderLink = (link) => {
+        if (link.url) {
+            return <Link href={link.url} dangerouslySetInnerHTML={{ __html: link.label }} />;
+        }
+
+        return <span dangerouslySetInnerHTML={{ __html: link.label }} />;
+    };
 
     return (
         <Layout>
@@ -129,18 +189,21 @@ export default function Index({ hotels }) {
                                         type="text"
                                         placeholder="Filter by Name"
                                         className="w-[180px]"
+                                        onChange={(e) => setFilterData({ ...filterData, name: e.target.value })}
                                     />
                                     <Input
                                         type="text"
                                         placeholder="Filter by Zip Code"
                                         className="w-[180px]"
+                                        onChange={(e) => setFilterData({ ...filterData, zip_code: e.target.value })}
                                     />
                                     <Input
                                         type="text"
                                         placeholder="Filter by Country"
                                         className="w-[180px]"
+                                        onChange={(e) => setFilterData({ ...filterData, country: e.target.value })}
                                     />
-                                    <Select>
+                                    <Select onValueChange={(value) => setFilterData({ ...filterData, city: value })}>
                                         <SelectTrigger className="w-[180px]">
                                             <SelectValue placeholder="Filter by City" />
                                         </SelectTrigger>
@@ -154,7 +217,7 @@ export default function Index({ hotels }) {
                                         </SelectContent>
                                     </Select>
 
-                                    <Select>
+                                    <Select onValueChange={(value) => setFilterData({ ...filterData, state: value })}>
                                         <SelectTrigger className="w-[180px]">
                                             <SelectValue placeholder="Filter by State" />
                                         </SelectTrigger>
@@ -168,7 +231,7 @@ export default function Index({ hotels }) {
                                         </SelectContent>
                                     </Select>
 
-                                    <Select>
+                                    <Select onValueChange={(value) => setFilterData({ ...filterData, rating: value })}>
                                         <SelectTrigger className="w-[180px]">
                                             <SelectValue placeholder="Filter by Rating" />
                                         </SelectTrigger>
@@ -182,7 +245,7 @@ export default function Index({ hotels }) {
                                         </SelectContent>
                                     </Select>
 
-                                    <Select>
+                                    <Select onValueChange={(value) => setFilterData({ ...filterData, per_page: value })}>
                                         <SelectTrigger className="w-[180px]">
                                             <SelectValue placeholder="Per page" />
                                         </SelectTrigger>
@@ -194,8 +257,12 @@ export default function Index({ hotels }) {
                                         </SelectContent>
                                     </Select>
 
-                                    <Button type="button" variant="default">
-                                        Filter
+                                    <Button type="button" variant="default" onClick={handleFilter}>
+                                        Apply Filters
+                                    </Button>
+
+                                    <Button type="button" variant="default" onClick={handleReset}>
+                                        Reset Filters
                                     </Button>
                                 </>
                             )}
@@ -224,7 +291,7 @@ export default function Index({ hotels }) {
                                 </Card>
                             </div>
                         ))
-                        : hotels.data.map((hotel) => (
+                        : HotelData?.data.map((hotel) => (
                             <div key={hotel.id} className="p-2 rounded-2xl">
                                 <Card className="w-full">
                                     <CardHeader>
@@ -255,7 +322,8 @@ export default function Index({ hotels }) {
                                     </CardContent>
                                     <CardFooter className="mt-2 flex justify-between gap-2 flex-wrap">
                                         {/* Edit Modal */}
-                                        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                                        {/* <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}></Dialog> */}
+                                        <Dialog>
                                             <DialogTrigger asChild>
                                                 <Button
                                                     size="lg"
@@ -590,10 +658,10 @@ export default function Index({ hotels }) {
                     ) : (
                         <>
                             <div className="text-sm text-muted-foreground">
-                                Showing {hotels.from} to {hotels.to} of {hotels.total} entries
+                                Showing {HotelData?.from} to {HotelData?.to} of {HotelData?.total} entries
                             </div>
                             <div className="text-right">
-                                {hotels.links.map((link, index) => (
+                                {HotelData.links.map((link, index) => (
                                     <Button
                                         key={index}
                                         variant={link.active ? "default" : "outline"}
@@ -601,10 +669,7 @@ export default function Index({ hotels }) {
                                         disabled={!link.url}
                                         asChild
                                     >
-                                        <a
-                                            href={link.url}
-                                            dangerouslySetInnerHTML={{ __html: link.label }}
-                                        />
+                                        {renderLink(link)}
                                     </Button>
                                 ))}
                             </div>

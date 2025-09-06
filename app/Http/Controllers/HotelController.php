@@ -8,9 +8,44 @@ use App\Models\Hotel;
 class HotelController extends Controller
 {
     /* public function index() */
-    public function index()
+    public function index(Request $request)
     {
-        $hotels = Hotel::paginate(8);
+        $name = $request->query('name');
+        $zip_code = $request->query('zip_code');
+        $city = $request->query('city');
+        $state = $request->query('state');
+        $country = $request->query('country');
+        $rating = $request->query('rating');
+        $per_page = $request->query('per_page') ?? 8;
+
+        $query = Hotel::query();
+
+        if ($name) {
+            $query->where('name', 'like', "%{$name}%");
+        }
+
+        if ($zip_code) {
+            $query->where('zip_code', $zip_code);
+        }
+
+        if ($city) {
+            $query->where('city', 'like', "%{$city}%");
+        }
+
+        if ($state) {
+            $query->where('state', 'like', "%{$state}%");
+        }
+
+        if ($country) {
+            $query->where('country', 'like', "%{$country}%");
+        }
+
+        if ($rating) {
+            $query->where('rating', $rating);
+        }
+
+        $hotels = $query->paginate($per_page);
+
         return inertia('Hotels/Index', ['hotels' => $hotels]);
     }
 
@@ -30,7 +65,7 @@ class HotelController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255|unique:hotels,name',
+            'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'address' => 'required|string|max:255',
             'city' => 'nullable|string|max:255',
