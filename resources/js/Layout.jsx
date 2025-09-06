@@ -13,6 +13,7 @@ import {
     SidebarProvider,
     SidebarTrigger,
 } from "@/components/ui/sidebar"
+import { Toaster } from "@/components/ui/sonner";
 
 export default function Layout({ children }) {
     return (
@@ -42,6 +43,7 @@ export default function Layout({ children }) {
                     </div>
                 </header>
                 <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+                    <Toaster />
                     {children}
                 </div>
             </SidebarInset>

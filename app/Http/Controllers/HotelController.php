@@ -30,13 +30,39 @@ class HotelController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
-            'location' => 'required|string|max:255',
+            'name' => 'required|string|max:255|unique:hotels,name',
+            'description' => 'nullable|string',
+            'address' => 'required|string|max:255',
+            'city' => 'nullable|string|max:255',
+            'state' => 'nullable|string|max:255',
+            'country' => 'nullable|string|max:255',
+            'zip_code' => 'nullable|string|max:20',
+            'phone' => 'nullable|string|max:20',
+            'email' => 'nullable|email|max:255',
             'rating' => 'required|integer|min:1|max:5',
+            'latitude' => 'nullable|numeric|between:-90,90',
+            'longitude' => 'nullable|numeric|between:-180,180',
+            'image' => 'nullable|url|max:2048',
         ]);
 
-        $hotel = Hotel::create($request->all());
-        return redirect()->route('hotels.index')->with('success', 'Hotel created successfully.');
+        $hotel = new Hotel();
+        $hotel->name = $request->name;
+        $hotel->slug = str()->slug($request->name);
+        $hotel->description = $request->description;
+        $hotel->address = $request->address;
+        $hotel->city = $request->city;
+        $hotel->state = $request->state;
+        $hotel->country = $request->country;
+        $hotel->zip_code = $request->zip_code;
+        $hotel->phone = $request->phone;
+        $hotel->email = $request->email;
+        $hotel->rating = $request->rating;
+        $hotel->latitude = $request->latitude;
+        $hotel->longitude = $request->longitude;
+        $hotel->image = $request->image;
+        $hotel->save();
+
+        return redirect()->back()->with('success', 'Hotel created successfully.');
     }
 
     /* public function edit(Hotel $hotel) */
@@ -55,7 +81,7 @@ class HotelController extends Controller
         ]);
 
         $hotel->update($request->all());
-        return redirect()->route('hotels.index')->with('success', 'Hotel updated successfully.');
+        return back()->with('success', 'Hotel updated successfully.');
     }
 
     /* public function destroy(Hotel $hotel) */
