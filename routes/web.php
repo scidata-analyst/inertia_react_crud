@@ -8,20 +8,30 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
-});
+// Route::get('/', function () {
+//     return Inertia::render('Welcome', [
+//         'canLogin' => Route::has('login'),
+//         'canRegister' => Route::has('register'),
+//         'laravelVersion' => Application::VERSION,
+//         'phpVersion' => PHP_VERSION,
+//     ]);
+// });
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
+    Route::get('/', function () {
+        return Inertia::render('Welcome', [
+            'canLogin' => Route::has('login'),
+            'canRegister' => Route::has('register'),
+            'laravelVersion' => Application::VERSION,
+            'phpVersion' => PHP_VERSION,
+        ]);
+    });
+
+    /* profile controller */
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -32,7 +42,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/rooms', [RoomController::class, 'store'])->name('rooms.store');
     Route::get('/rooms/{room}', [RoomController::class, 'show'])->name('rooms.show');
     Route::get('/rooms/{room}/edit', [RoomController::class, 'edit'])->name('rooms.edit');
-    Route::put('/rooms/{room}', [RoomController::class, 'update'])->name('rooms.update');
+    Route::put('/rooms/{id}', [RoomController::class, 'update'])->name('rooms.update');
     Route::delete('/rooms/{room}', [RoomController::class, 'destroy'])->name('rooms.destroy');
 
     /* hotel controller */

@@ -25,8 +25,10 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 
+import { toast } from "sonner"
+
 import Layout from "@/Layout"
-import { Head } from "@inertiajs/react"
+import { Head, router, usePage } from "@inertiajs/react"
 
 const formSchema = z.object({
     name: z.string().min(2, { message: "Room name must be at least 2 characters." }),
@@ -39,6 +41,8 @@ const formSchema = z.object({
 })
 
 export default function Create() {
+    const { errors: serverErrors, flash } = usePage().props
+
     const form = useForm({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -53,8 +57,26 @@ export default function Create() {
     })
 
     function onSubmit(values) {
-        console.log("Room Data:", values)
-        // TODO: send data to Laravel backend via fetch/axios
+        router.post("/rooms", values, {
+            onSuccess: () => {
+                console.log(flash?.success)
+                if (flash?.success) {
+                    toast.success(flash.success, {
+                        style: { backgroundColor: "#16a34a", color: "white" },
+                    })
+                }
+                form.reset()
+            },
+            onError: (errors) => {
+                Object.entries(errors).forEach(([key, value]) => {
+                    const message = Array.isArray(value) ? value.join(", ") : String(value)
+                    //form.setError(key, { type: "server", message })
+                    toast.error(message, {
+                        style: { backgroundColor: "#dc2626", color: "white" },
+                    })
+                })
+            }
+        })
     }
 
     return (
@@ -62,7 +84,7 @@ export default function Create() {
             <Head title="Create Room - Hotel Management" />
             <div className="bg-muted/50 flex-1 rounded-xl p-6 md:min-h-min">
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-3">
                         {/* Room Name */}
                         <FormField
                             control={form.control}
@@ -145,21 +167,6 @@ export default function Create() {
                             )}
                         />
 
-                        {/* Description */}
-                        <FormField
-                            control={form.control}
-                            name="description"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Description</FormLabel>
-                                    <FormControl>
-                                        <Textarea placeholder="Room details..." {...field} />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-
                         {/* Image */}
                         <FormField
                             control={form.control}
@@ -175,12 +182,27 @@ export default function Create() {
                             )}
                         />
 
+                        {/* Description */}
+                        <FormField
+                            control={form.control}
+                            name="description"
+                            render={({ field }) => (
+                                <FormItem className="col-span-full">
+                                    <FormLabel>Description</FormLabel>
+                                    <FormControl>
+                                        <Textarea placeholder="Room details..." {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+
                         {/* Availability */}
                         <FormField
                             control={form.control}
                             name="is_available"
                             render={({ field }) => (
-                                <FormItem className="flex items-center gap-2">
+                                <FormItem className="col-span-full flex flex-row items-center space-x-3 space-y-0">
                                     <FormControl>
                                         <Checkbox
                                             checked={field.value}
@@ -193,7 +215,12 @@ export default function Create() {
                             )}
                         />
 
-                        <Button type="submit">Create Room</Button>
+                        {/* Submit Button - full width */}
+                        <div className="col-span-full">
+                            <Button type="submit" className="w-full">
+                                Create Room
+                            </Button>
+                        </div>
                     </form>
                 </Form>
             </div>

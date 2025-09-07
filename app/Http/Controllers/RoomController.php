@@ -3,15 +3,39 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
 use App\Models\Room;
 
 class RoomController extends Controller
 {
     /* public function index() */
-    public function index()
+    public function index(Request $request)
     {
-        $rooms = Room::with('hotel')->get();
+        $name = $request->query('name');
+        $capacity = $request->query('capacity');
+        $price = $request->query('price');
+        $type = $request->query('type');
+        $per_page = $request->query('per_page') ?? 8;
+
+        $query = Room::query();
+
+        if ($name) {
+            $query->where('name', 'like', "%{$name}%");
+        }
+
+        if ($capacity) {
+            $query->where('capacity', $capacity);
+        }
+
+        if ($price) {
+            $query->where('price', $price);
+        }
+
+        if ($type) {
+            $query->where('room_type', 'like', "%{$type}%");
+        }
+
+        $rooms = $query->paginate($per_page)->withQueryString();
+
         return inertia('Rooms/Index', ['rooms' => $rooms]);
     }
 
@@ -31,18 +55,27 @@ class RoomController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'hotel_id' => 'required|exists:hotels,id',
             'name' => 'required|string|max:255',
             'room_type' => 'required|string|max:255',
             'capacity' => 'required|integer|min:1',
             'price' => 'required|numeric|min:0',
             'description' => 'nullable|string',
-            'image' => 'nullable|image|max:2048',
+            'image' => 'nullable|string|max:2048',
             'is_available' => 'required|boolean',
         ]);
 
-        $room = Room::create($validated);
-        return redirect()->route('rooms.index')->with('success', 'Room created successfully.');
+        $room = new Room();
+        $room->hotel_id = 1;
+        $room->name = $validated['name'];
+        $room->room_type = $validated['room_type'];
+        $room->capacity = $validated['capacity'];
+        $room->price = $validated['price'];
+        $room->description = $validated['description'];
+        $room->image = $validated['image'];
+        $room->is_available = $validated['is_available'];
+        $room->save();
+
+        return redirect()->back()->with('success', 'Room created successfully.');
     }
 
     /* public function edit(Room $room) */
@@ -52,7 +85,7 @@ class RoomController extends Controller
     }
 
     /* public function update(Request $request, Room $room) */
-    public function update(Request $request, Room $room)
+    public function update(Request $request, $id)
     {
         $validated = $request->validate([
             'hotel_id' => 'required|exists:hotels,id',
@@ -61,12 +94,25 @@ class RoomController extends Controller
             'capacity' => 'required|integer|min:1',
             'price' => 'required|numeric|min:0',
             'description' => 'nullable|string',
-            'image' => 'nullable|image|max:2048',
+            'image' => 'nullable|string|max:2048',
             'is_available' => 'required|boolean',
         ]);
 
-        $room->update($validated);
-        return redirect()->route('rooms.index')->with('success', 'Room updated successfully.');
+        $room = Room::findOrFail($id);
+        $room->name = $validated['name'];
+        $room->room_type = $validated['room_type'];
+        $room->capacity = $validated['capacity'];
+        $room->price = $validated['price'];
+        $room->description = $validated['description'];
+        $room->image = $validated['image'];
+        $room->is_available = $validated['is_available'];
+        $room->save();
+
+        if ($request->ajax()) {
+            return response()->json(['message' => 'Room updated successfully.']);
+        }
+
+        return redirect()->back()->with('success', 'Room updated successfully.');
     }
 
     /* public function destroy(Room $room) */

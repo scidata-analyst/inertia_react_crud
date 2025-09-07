@@ -89,7 +89,7 @@ export default function Index({ hotels }) {
         });
         setLoading(true);
         const response = await router.get('/hotels', {
-            per_page: 8,
+
         }, {
             preserveState: true,
             preserveScroll: true,
@@ -104,7 +104,7 @@ export default function Index({ hotels }) {
     }
 
     /* handle update hotel */
-    const handleEditSubmit = async (e) => {
+    const handleEditSubmit = (e) => {
         e.preventDefault()
 
         setSubmitting(true)
@@ -124,7 +124,7 @@ export default function Index({ hotels }) {
         formData.append("longitude", selectedHotel.longitude)
         formData.append("image", selectedHotel.image)
 
-        const response = await fetch(`/hotels/${selectedHotel.id}`, {
+        fetch(`/hotels/${selectedHotel.id}`, {
             method: "POST",
             body: formData,
             headers: {
@@ -135,20 +135,15 @@ export default function Index({ hotels }) {
             },
         })
 
-        if (response.ok) {
-            const data = await response.json()
-            toast.success("Hotel updated successfully!", {
-                style: { backgroundColor: "#16a34a", color: "white" },
-            })
-            setError(null)
-            setSubmitting(false)
-            setIsDialogOpen(false)
-            router.reload()
-        } else {
-            const errorData = await response.json()
-            setError(errorData.errors)
-            setSubmitting(false)
-        }
+        toast.success("Hotel updated successfully!", {
+            style: { backgroundColor: "#16a34a", color: "white" },
+        })
+
+        setHotelData(HotelData)
+        setError(null)
+        setSubmitting(false)
+        setIsDialogOpen(false)
+        router.reload()
     }
 
     /* handle delete hotel */

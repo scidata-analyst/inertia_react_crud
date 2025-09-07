@@ -44,7 +44,7 @@ class HotelController extends Controller
             $query->where('rating', $rating);
         }
 
-        $hotels = $query->paginate($per_page);
+        $hotels = $query->paginate($per_page)->withQueryString();
 
         return inertia('Hotels/Index', ['hotels' => $hotels]);
     }
@@ -141,10 +141,6 @@ class HotelController extends Controller
         $hotel->longitude = $request->longitude;
         $hotel->image = $request->image;
         $hotel->save();
-
-        if($request->ajax()){
-            return response()->json(['message' => 'Hotel updated successfully.']);
-        }
 
         return redirect()->back()->with('success', 'Hotel updated successfully.');
     }
