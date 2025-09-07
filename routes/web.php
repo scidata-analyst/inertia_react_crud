@@ -3,7 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoomController;
 use App\Http\Controllers\HotelController;
-
+use App\Http\Controllers\FrontendController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -16,6 +16,10 @@ use Inertia\Inertia;
 //         'phpVersion' => PHP_VERSION,
 //     ]);
 // });
+
+Route::get('/homepage', [FrontendController::class, 'index'])->name('frontend.index');
+Route::get('/rooms/all', [FrontendController::class, 'rooms'])->name('frontend.rooms');
+Route::get('/room/view/{id}', [FrontendController::class, 'room'])->name('frontend.room');
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');

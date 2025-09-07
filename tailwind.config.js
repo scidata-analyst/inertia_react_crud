@@ -15,7 +15,7 @@ export default {
     	extend: {
     		fontFamily: {
     			sans: [
-    				'Salsa',
+    				'Kulim Park',
                     ...defaultTheme.fontFamily.sans
                 ]
     		},
