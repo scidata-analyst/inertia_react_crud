@@ -4,12 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Room;
+use Illuminate\Support\Facades\Auth;
 
 class RoomController extends Controller
 {
     /* public function index() */
     public function index(Request $request)
     {
+        $currentHotel = Auth::user()->current_hotel;
         $name = $request->query('name');
         $capacity = $request->query('capacity');
         $price = $request->query('price');
@@ -17,6 +19,10 @@ class RoomController extends Controller
         $per_page = $request->query('per_page') ?? 8;
 
         $query = Room::query();
+
+        if ($currentHotel !== null) {
+            $query->where('hotel_id', $currentHotel);
+        }
 
         if ($name) {
             $query->where('name', 'like', "%{$name}%");

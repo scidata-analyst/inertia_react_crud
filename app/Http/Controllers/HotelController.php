@@ -4,12 +4,15 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Hotel;
+use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 
 class HotelController extends Controller
 {
     /* public function index() */
     public function index(Request $request)
     {
+        $currentAuth = Auth::user()->id;
         $name = $request->query('name');
         $zip_code = $request->query('zip_code');
         $city = $request->query('city');
@@ -19,6 +22,10 @@ class HotelController extends Controller
         $per_page = $request->query('per_page') ?? 8;
 
         $query = Hotel::query();
+
+        if ($currentAuth) {
+            $query->where('user_id', $currentAuth);
+        }
 
         if ($name) {
             $query->where('name', 'like', "%{$name}%");
@@ -81,6 +88,7 @@ class HotelController extends Controller
         ]);
 
         $hotel = new Hotel();
+        $hotel->user_id = Auth::user()->id;
         $hotel->name = $request->name;
         $hotel->slug = str()->slug($request->name) . '-' . uniqid() . '-' . now()->timestamp;
         $hotel->description = $request->description;
@@ -151,4 +159,41 @@ class HotelController extends Controller
         $hotel->delete();
         return redirect()->route('hotels.index')->with('success', 'Hotel deleted successfully.');
     }
+
+    /* public function specificHotelByUser($id) */
+    public function specificHotelByUser()
+    {
+        $auth = Auth::user();
+        $selectedHotelId = Auth::user()->current_hotel;
+        $hotels = Hotel::query()
+            ->select('id', 'name')
+            ->where('user_id', Auth::user()->id)
+            ->get();
+
+        if ($hotels->isEmpty()) {
+            return response()->json([
+                'message' => 'No hotels found for this user',
+                'data' => [],
+            ], 404);
+        }
+
+        return response()->json([
+            'data' => $hotels,
+            'selectedHotelId' => $selectedHotelId,
+            'auth' => $auth
+        ], 200);
+    }
+
+    /* public function selectHotel($id) */
+    public function selectHotel($id)
+    {
+        $user = Auth::user()->id;
+
+        User::where('id', $user)->update([
+            'current_hotel' => $id,
+        ]);
+
+        return response()->json($id);
+    }
+
 }

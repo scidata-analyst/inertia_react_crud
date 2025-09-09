@@ -38,6 +38,7 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label"
+import { Skeleton } from "@/Components/ui/skeleton"
 
 export default function Index({ hotels }) {
     const [loading, setLoading] = useState(false)
@@ -163,7 +164,7 @@ export default function Index({ hotels }) {
 
     return (
         <Layout>
-            <Head title="Hotel - Hotel Management" />
+            <Head title="Hotels" />
             <div className="">
                 <h1 className="text-2xl font-bold mb-4">Hotels</h1>
 
@@ -173,7 +174,7 @@ export default function Index({ hotels }) {
                         <div className="flex items-center gap-2 flex-wrap">
                             {loading ? (
                                 Array.from({ length: 6 }).map((_, i) => (
-                                    <div
+                                    <Skeleton
                                         key={i}
                                         className="w-[180px] h-10 bg-muted animate-pulse rounded-md"
                                     />
@@ -272,16 +273,16 @@ export default function Index({ hotels }) {
                             <div key={i} className="p-2 rounded-2xl">
                                 <Card className="w-full animate-pulse">
                                     <CardHeader>
-                                        <div className="h-6 w-3/4 bg-muted rounded mb-2" />
-                                        <div className="h-4 w-1/2 bg-muted rounded" />
+                                        <Skeleton className="h-6 w-3/4 bg-muted rounded mb-2" />
+                                        <Skeleton className="h-4 w-1/2 bg-muted rounded" />
                                     </CardHeader>
                                     <CardContent>
-                                        <div className="h-6 w-24 bg-muted rounded mb-4" />
-                                        <div className="w-full aspect-video bg-muted rounded-xl" />
+                                        <Skeleton className="h-6 w-24 bg-muted rounded mb-4" />
+                                        <Skeleton className="w-full aspect-video bg-muted rounded-xl" />
                                     </CardContent>
                                     <CardFooter className="flex flex-col gap-2">
-                                        <div className="h-10 w-full bg-muted rounded" />
-                                        <div className="h-10 w-full bg-muted rounded" />
+                                        <Skeleton className="h-10 w-full bg-muted rounded" />
+                                        <Skeleton className="h-10 w-full bg-muted rounded" />
                                     </CardFooter>
                                 </Card>
                             </div>
@@ -313,7 +314,7 @@ export default function Index({ hotels }) {
                                                 </TooltipContent>
                                             </Tooltip>
                                         </div>
-                                        <div className="mt-5 w-full aspect-video bg-muted rounded-xl" />
+                                        <Skeleton className="mt-5 w-full aspect-video bg-muted rounded-xl" />
                                     </CardContent>
                                     <CardFooter className="mt-2 flex justify-between gap-2 flex-wrap">
                                         {/* Edit Modal */}
@@ -643,7 +644,7 @@ export default function Index({ hotels }) {
                             <div className="h-4 w-48 bg-muted animate-pulse rounded mb-2 md:mb-0" />
                             <div className="flex space-x-2">
                                 {Array.from({ length: 5 }).map((_, i) => (
-                                    <div
+                                    <Skeleton
                                         key={i}
                                         className="h-9 w-9 bg-muted animate-pulse rounded"
                                     />

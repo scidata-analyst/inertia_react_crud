@@ -1,5 +1,5 @@
 "use client"
-
+import Dropdown from '@/Components/Dropdown';
 import {
     BadgeCheck,
     Bell,
@@ -76,19 +76,15 @@ export function NavUser({
                         <DropdownMenuSeparator />
                         <DropdownMenuGroup>
                             <DropdownMenuItem>
-                                <Sparkles />
-                                Upgrade to Pro
-                            </DropdownMenuItem>
-                        </DropdownMenuGroup>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuGroup>
-                            <DropdownMenuItem>
-                                <BadgeCheck />
-                                Account
-                            </DropdownMenuItem>
-                            <DropdownMenuItem>
-                                <CreditCard />
-                                Billing
+                                <Dropdown.Link
+                                    href={route('dashboard')}
+                                    method="get"
+                                    as="button"
+                                    className='pt-0 pb-0 pl-0 flex items-center gap-2'
+                                >
+                                    <BadgeCheck className='w-4 h-4' />
+                                    Profile
+                                </Dropdown.Link>
                             </DropdownMenuItem>
                             <DropdownMenuItem>
                                 <Bell />
@@ -97,8 +93,17 @@ export function NavUser({
                         </DropdownMenuGroup>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem>
-                            <LogOut />
-                            Log out
+                            {/* <LogOut />
+                            Log out */}
+                            <Dropdown.Link
+                                href={route('logout')}
+                                method="post"
+                                as="button"
+                                className='pt-0 pb-0 pl-0 flex items-center gap-2'
+                            >
+                                <LogOut className='w-4 h-4' />
+                                Log Out
+                            </Dropdown.Link>
                         </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
