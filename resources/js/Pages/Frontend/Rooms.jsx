@@ -11,7 +11,7 @@ const Footer = lazy(() => import("./components/Footer"));
 const Filter = lazy(() => import("./components/Filter"));
 const FetchRoom = lazy(() => import("./components/FetchRoom"));
 
-export default function Rooms() {
+export default function Rooms({ data }) {
     return (
         <>
             <Head title="Hotels" />
@@ -31,9 +31,9 @@ export default function Rooms() {
                     {/* End Sidebar Filter Section */}
                 </div>
 
-                <div>
+                <div className="w-full">
                     <Suspense fallback={<FetchRoomSkeleton />}>
-                        <FetchRoom />
+                        <FetchRoom data={data} />
                     </Suspense>
                 </div>
             </main>

@@ -3,8 +3,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export default function FilterSkeleton() {
     return (
-        <aside className="w-full md:w-80 space-y-6">
-            <Card className="p-6">
+        <aside className="w-full md:w-80">
+            <Card className="pt-6">
                 <CardContent className="space-y-6">
                     {/* Title */}
                     <Skeleton className="h-6 w-3/4" />

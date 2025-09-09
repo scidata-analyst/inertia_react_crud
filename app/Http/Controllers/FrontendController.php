@@ -16,7 +16,9 @@ class FrontendController extends Controller
     /* public function all rooms */
     public function rooms()
     {
-        return inertia('Frontend/Rooms');
+        $rooms = Room::paginate(9);
+
+        return inertia('Frontend/Rooms', ['data' => $rooms]);
     }
 
     /* public function specific room */

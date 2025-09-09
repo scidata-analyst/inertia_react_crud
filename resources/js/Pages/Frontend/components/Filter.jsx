@@ -1,6 +1,6 @@
 export default function Filter() {
     return (
-        <aside className="w-full md:w-80 bg-white shadow-lg rounded-2xl p-6 space-y-6">
+        <aside className="w-full md:w-80 bg-white shadow-lg rounded-2xl p-6 space-y-6 sticky top-20">
             <h2 className="text-2xl font-bold text-gray-800 border-b pb-3">
                 Filter Rooms
             </h2>
@@ -24,15 +24,43 @@ export default function Filter() {
                 <div className="space-y-2">
                     <label className="flex items-center space-x-2">
                         <input type="checkbox" className="text-blue-500 rounded" />
-                        <span>Single</span>
+                        <span>Single Room</span>
                     </label>
                     <label className="flex items-center space-x-2">
                         <input type="checkbox" className="text-blue-500 rounded" />
-                        <span>Double</span>
+                        <span>Double Room</span>
                     </label>
                     <label className="flex items-center space-x-2">
                         <input type="checkbox" className="text-blue-500 rounded" />
-                        <span>Suite</span>
+                        <span>Suite Room</span>
+                    </label>
+                    <label className="flex items-center space-x-2">
+                        <input type="checkbox" className="text-blue-500 rounded" />
+                        <span>Luxury Room</span>
+                    </label>
+                    <label className="flex items-center space-x-2">
+                        <input type="checkbox" className="text-blue-500 rounded" />
+                        <span>Suite Room</span>
+                    </label>
+                    <label className="flex items-center space-x-2">
+                        <input type="checkbox" className="text-blue-500 rounded" />
+                        <span>Family Room</span>
+                    </label>
+                    <label className="flex items-center space-x-2">
+                        <input type="checkbox" className="text-blue-500 rounded" />
+                        <span>Apartments Room</span>
+                    </label>
+                    <label className="flex items-center space-x-2">
+                        <input type="checkbox" className="text-blue-500 rounded" />
+                        <span>Villa Room</span>
+                    </label>
+                    <label className="flex items-center space-x-2">
+                        <input type="checkbox" className="text-blue-500 rounded" />
+                        <span>Cabin Room</span>
+                    </label>
+                    <label className="flex items-center space-x-2">
+                        <input type="checkbox" className="text-blue-500 rounded" />
+                        <span>Resort Room</span>
                     </label>
                 </div>
             </div>
