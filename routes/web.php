@@ -18,9 +18,12 @@ use Inertia\Inertia;
 //     ]);
 // });
 
+/* frontend controller */
 Route::get('/homepage', [FrontendController::class, 'index'])->name('frontend.index');
 Route::get('/rooms/all', [FrontendController::class, 'rooms'])->name('frontend.rooms');
 Route::get('/room/view/{id}', [FrontendController::class, 'room'])->name('frontend.room');
+Route::get('/room/type/{type}', [FrontendController::class, 'roomType'])->name('frontend.roomType');
+Route::get('/rooms/fetch', [FrontendController::class, 'fetchRooms'])->name('frontend.fetchRooms');
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');

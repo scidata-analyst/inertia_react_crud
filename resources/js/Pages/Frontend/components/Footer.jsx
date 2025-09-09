@@ -4,7 +4,7 @@ export default function Footer() {
             <div className="px-6 py-12 grid grid-cols-1 md:grid-cols-4 gap-8">
                 {/* Logo & Description */}
                 <div>
-                    <h2 className="text-2xl font-bold text-white mb-3">HotelBooking</h2>
+                    <h2 className="text-2xl font-bold text-white mb-3 uppercase">Hotel Booking</h2>
                     <p className="text-gray-400">
                         Experience luxury stays and find your perfect room worldwide with ease.
                     </p>

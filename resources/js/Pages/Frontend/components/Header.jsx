@@ -9,8 +9,8 @@ export default function Header() {
             <header className="bg-white sticky top-0 z-50 shadow-sm">
                 <div className=" px-4 py-4 flex items-center justify-between gap-8">
                     {/* Logo */}
-                    <a href="/" className="text-2xl font-extrabold text-blue-600 tracking-tight transition-colors duration-200 hover:text-blue-800">
-                        StayEase
+                    <a href="/" className="text-2xl uppercase font-extrabold text-blue-600 tracking-tight transition-colors duration-200 hover:text-blue-800">
+                        Hotel Booking
                     </a>
 
                     {/* Search */}
