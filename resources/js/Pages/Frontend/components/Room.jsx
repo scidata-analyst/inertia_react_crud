@@ -8,6 +8,7 @@ import {
     CarouselPrevious,
 } from "@/components/ui/carousel";
 import { useEffect, useState } from "react";
+import { Link } from "@inertiajs/react";
 
 export default function Room({ title, type, short_brief, url }) {
     const [rooms, setRooms] = useState(null);
@@ -36,16 +37,16 @@ export default function Room({ title, type, short_brief, url }) {
                     <p className="mb-6 text-center">{short_brief}</p>
                 </div>
                 <div>
-                    <a
-                        href="#"
+                    <Link
+                        href={`/rooms/all`}
                         className="bg-blue-600 text-white font-semibold px-6 py-2 rounded-md hover:bg-blue-700 transition-colors"
                     >
                         View All
-                    </a>
+                    </Link>
                 </div>
             </div>
 
-            <Carousel className="w-full max-w-[1780px] mx-auto">
+            <Carousel className="w-full">
                 <CarouselContent>
                     {rooms
                         ? rooms.map((room, index) => (
@@ -66,7 +67,7 @@ export default function Room({ title, type, short_brief, url }) {
                                     </div>
                                     <div className="p-5">
                                         <h3 className="text-2xl font-semibold mb-2">
-                                            {room.name}
+                                            <Link href={`/room/view/${room.id}`}>{room.name}</Link>
                                         </h3>
                                         <p className="text-gray-600 mb-4">
                                             {room.description.length > 80
@@ -125,8 +126,8 @@ export default function Room({ title, type, short_brief, url }) {
                             </CarouselItem>
                         ))}
                 </CarouselContent>
-                <CarouselPrevious />
-                <CarouselNext />
+                <CarouselPrevious className="left-2" />
+                <CarouselNext className="right-2" />
             </Carousel>
         </section>
     );

@@ -42,7 +42,9 @@ export default function FetchRoom({ data }) {
                             </span>
                         </div>
                         <CardContent className="p-5 space-y-3">
-                            <h3 className="text-2xl font-semibold mb-2">{room.name}</h3>
+                            <h3 className="text-2xl font-semibold mb-2">
+                                <Link href={`/room/view/${room.id}`}>{room.name}</Link>
+                            </h3>
                             <p className="text-gray-600 mb-4">
                                 {room.description.length > 80
                                     ? room.description.slice(0, 80) + "..."

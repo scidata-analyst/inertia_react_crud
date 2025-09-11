@@ -24,7 +24,8 @@ class FrontendController extends Controller
     /* public function specific room */
     public function room($id)
     {
-        return inertia('Frontend/SpecificRoom');
+        $room = Room::where('id', $id)->first();
+        return inertia('Frontend/SpecificRoom', ['data' => $room]);
     }
 
     /* public function sepcific room by type */

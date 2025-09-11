@@ -33,7 +33,7 @@ import {
 
 import { Head } from "@inertiajs/react";
 
-export default function SpecificRoom() {
+export default function SpecificRoom({ data }) {
     // Dummy data
     const hotel = {
         name: "Grand Royale Hotel",
@@ -78,18 +78,19 @@ export default function SpecificRoom() {
     return (
         <>
             <Header />
-            <Head title="Specific Room - Hotel Management" />
+            <Head title={`${data.name} `} />
+
 
             {/* Hero with overlay */}
             <section className="relative w-full h-[400px] md:h-[500px]">
                 <img
                     src={hotel.image_urls[0]}
-                    alt={room.name}
+                    alt={data.name}
                     className="absolute inset-0 w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-black/10" />
                 <div className="relative z-10 flex flex-col justify-end h-full px-6 pb-12 text-white">
-                    <h1 className="text-4xl md:text-5xl font-bold">{room.name}</h1>
+                    <h1 className="text-4xl md:text-5xl font-bold">{data.name}</h1>
                     <div className="flex items-center mt-2 gap-1 text-yellow-400">
                         {[...Array(Math.floor(hotel.rating))].map((_, i) => (
                             <Star key={i} className="w-5 h-5 fill-yellow-400" />
@@ -99,7 +100,7 @@ export default function SpecificRoom() {
                         </span>
                     </div>
                     <p className="mt-2 text-xl font-semibold text-blue-200">
-                        From ${room.price} / night
+                        From ${data.price} / night
                     </p>
                 </div>
             </section>
@@ -112,7 +113,7 @@ export default function SpecificRoom() {
                         <h2 className="text-2xl font-semibold text-gray-900 mb-3">
                             Room Overview
                         </h2>
-                        <p className="text-gray-700 leading-relaxed">{room.description}</p>
+                        <p className="text-gray-700 leading-relaxed">{data.description}</p>
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-6">
                             <div className="flex items-center gap-2">
                                 <BedDouble className="w-5 h-5 text-blue-600" />
@@ -120,11 +121,11 @@ export default function SpecificRoom() {
                             </div>
                             <div className="flex items-center gap-2">
                                 <Users className="w-5 h-5 text-blue-600" />
-                                <span>{room.guests_info}</span>
+                                <span>{data.capacity}</span>
                             </div>
                             <div className="flex items-center gap-2">
                                 <DollarSign className="w-5 h-5 text-blue-600" />
-                                <span>${room.price} / night</span>
+                                <span>${data.price} / night</span>
                             </div>
                             <div className="flex items-center gap-2">
                                 <Calendar className="w-5 h-5 text-blue-600" />
@@ -187,8 +188,8 @@ export default function SpecificRoom() {
                                     </CarouselItem>
                                 ))}
                             </CarouselContent>
-                            <CarouselPrevious />
-                            <CarouselNext />
+                            <CarouselPrevious className="left-2" />
+                            <CarouselNext className="right-2" />
                         </Carousel>
                     </div>
 
@@ -226,7 +227,7 @@ export default function SpecificRoom() {
                                 Check Availability
                             </h3>
                             <span className="text-xl font-bold text-blue-600">
-                                ${room.price}
+                                ${data.price}
                             </span>
                         </div>
                         <form className="space-y-4">
