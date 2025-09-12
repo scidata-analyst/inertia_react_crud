@@ -10,7 +10,36 @@ import {
 import { useEffect, useState } from "react";
 import { Link } from "@inertiajs/react";
 
-export default function Room({ title, type, short_brief, url }) {
+/* Async Image Loader (simple) */
+const AsyncImage = ({ src, alt, className }) => {
+    const [loaded, setLoaded] = useState(false);
+
+    return (
+        <>
+            {!loaded && <Skeleton className={className} />}
+            {loaded && (
+                <img
+                    src={src}
+                    alt={alt}
+                    className={className}
+                    onLoad={() => setLoaded(true)}
+                    onError={() => setLoaded(true)}
+                />
+            )}
+            {!loaded && (
+                <img
+                    src={src}
+                    alt={alt}
+                    className="hidden"
+                    onLoad={() => setLoaded(true)}
+                    onError={() => setLoaded(true)}
+                />
+            )}
+        </>
+    );
+};
+
+export default function Room({ title, type, short_brief }) {
     const [rooms, setRooms] = useState(null);
 
     useEffect(() => {
@@ -56,10 +85,10 @@ export default function Room({ title, type, short_brief, url }) {
                             >
                                 <div className="bg-white shadow-lg rounded-xl overflow-hidden hover:shadow-2xl transition">
                                     <div className="relative">
-                                        <img
+                                        <AsyncImage
                                             src={`https://picsum.photos/600/400?${index}`}
                                             alt={room.name}
-                                            className="w-full h-56 object-cover"
+                                            className="w-full h-56 object-cover rounded-t-xl"
                                         />
                                         <span className="absolute top-3 left-3 bg-indigo-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
                                             ${room.price}/night
@@ -67,7 +96,9 @@ export default function Room({ title, type, short_brief, url }) {
                                     </div>
                                     <div className="p-5">
                                         <h3 className="text-2xl font-semibold mb-2">
-                                            <Link href={`/room/view/${room.id}`}>{room.name}</Link>
+                                            <Link href={`/room/view/${room.id}`}>
+                                                {room.name}
+                                            </Link>
                                         </h3>
                                         <p className="text-gray-600 mb-4">
                                             {room.description.length > 80

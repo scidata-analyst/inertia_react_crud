@@ -3,9 +3,38 @@ import { Card, CardContent } from "@/components/ui/card";
 import FetchRoomSkeleton from "./FetchRoomSkeleton";
 import { Link } from "@inertiajs/react";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+
+/* Async Image Loader (simple) */
+const AsyncImage = ({ src, alt, className }) => {
+    const [loaded, setLoaded] = useState(false);
+
+    return (
+        <>
+            {!loaded && <Skeleton className={className} />}
+            {loaded && (
+                <img
+                    src={src}
+                    alt={alt}
+                    className={className}
+                    onLoad={() => setLoaded(true)}
+                    onError={() => setLoaded(true)}
+                />
+            )}
+            {!loaded && (
+                <img
+                    src={src}
+                    alt={alt}
+                    className="hidden"
+                    onLoad={() => setLoaded(true)}
+                    onError={() => setLoaded(true)}
+                />
+            )}
+        </>
+    );
+};
 
 export default function FetchRoom({ data }) {
-    console.log(data);
     const [rooms, setRooms] = useState(data?.data || []);
     const [allData, setAllData] = useState(data);
 
@@ -26,16 +55,16 @@ export default function FetchRoom({ data }) {
     return (
         <>
             <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-6">
-                {rooms.map((room) => (
+                {rooms.map((room, index) => (
                     <Card
                         key={room.id}
                         className="bg-white shadow-lg rounded-xl overflow-hidden hover:shadow-2xl transition w-full"
                     >
                         <div className="relative">
-                            <img
-                                src="https://d354o3y6yz93dt.cloudfront.net/images/768x/ff96097e8e14c51fd44838a36133301a63be45f2/Brookdale-Overland-Park-119th-Living-Room.jpg"
+                            <AsyncImage
+                                src={`https://picsum.photos/600/400?${index}`}
                                 alt={room.name}
-                                className="w-full h-56 object-cover"
+                                className="w-full h-56 object-cover rounded-t-xl"
                             />
                             <span className="absolute top-3 left-3 bg-indigo-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
                                 ${room.price}/night
